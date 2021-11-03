@@ -392,57 +392,54 @@ class cpu_t
             break;
 
             case CARGI: // A = A1 ;carrega imediato
-                cpu->ESTADO.PC++; 
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1 , &inst);
                 if ( exec_err != ERR_OK) break;
                 
                 cpu->ESTADO.A1 = inst;
                 cpu->ESTADO.ACC = cpu->ESTADO.A1;
                     
-                cpu->ESTADO.PC++;   
+                cpu->ESTADO.PC += 2;   
                 
             break;
 
             case CARGM: // A = mem[A1] ;carrega da memória
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+                
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
                 exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.A1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.ACC = inst;
                 
-                cpu->ESTADO.PC++;
+                cpu->ESTADO.PC +=2;
             break;
-
+            
             case CARGX: // A = mem[A1+X]	;carrega indexado
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
                 cpu->ESTADO.ACC = cpu->ESTADO.A1 + cpu->ESTADO.AUX;
                 
-                cpu->ESTADO.PC++;
+                cpu->ESTADO.PC +=2;
             break;
 
             case ARMM: // mem[A1] = A	;armazena na memória
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
                 exec_err = mem_t::mem_escreve( cpu->mem, cpu->ESTADO.A1, cpu->ESTADO.ACC);
                 if ( exec_err != ERR_OK) break;
-                cpu->ESTADO.PC++;
+                cpu->ESTADO.PC +=2;
             break;
 
             case ARMX: // mem[A1+X] = A	;armazena indexado
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+                
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC+1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst + cpu->ESTADO.AUX;
                 exec_err = mem_t::mem_escreve( cpu->mem, cpu->ESTADO.A1, cpu->ESTADO.ACC);
                 if ( exec_err != ERR_OK) break;
-                cpu->ESTADO.PC++;
+                cpu->ESTADO.PC +=2;
             break;
 
             case MVAX: // X = A	;inicializa X
@@ -464,8 +461,7 @@ class cpu_t
             break;
 
             case SOMA: // A += mem[A1]	;soma
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
                 exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.A1, &inst);
@@ -473,12 +469,11 @@ class cpu_t
                 cpu->ESTADO.A1 = inst;
                 cpu->ESTADO.ACC += cpu->ESTADO.A1;
 
-                cpu->ESTADO.PC++;
+                cpu->ESTADO.PC += 2;
             break;
 
             case SUB: // A -= mem[A1]	;subtração
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
                 exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.A1, &inst);
@@ -486,12 +481,11 @@ class cpu_t
                 cpu->ESTADO.A1 = inst;
                 cpu->ESTADO.ACC -= cpu->ESTADO.A1;
 
-                cpu->ESTADO.PC++;
+                cpu->ESTADO.PC += 2;
             break;
 
-            case MULT: // A *= mem[A1]	;multiplicação
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+            case MULT: // A *= mem[A1]	;multiplicação                
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
                 exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.A1, &inst);
@@ -499,12 +493,11 @@ class cpu_t
                 cpu->ESTADO.A1 = inst;
                 cpu->ESTADO.ACC *= cpu->ESTADO.A1;
 
-                cpu->ESTADO.PC++;
+                cpu->ESTADO.PC +=2;
             break;
 
-            case DIV: //A /= mem[A1]	;divisão
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+            case DIV: //A /= mem[A1]	;divisão                
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
                 exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.A1, &inst);
@@ -512,13 +505,13 @@ class cpu_t
                 cpu->ESTADO.A1 = inst;
                 cpu->ESTADO.ACC /= cpu->ESTADO.A1;
 
-                cpu->ESTADO.PC++;
+                cpu->ESTADO.PC += 2;
             break;
             
 
             case RESTO: // A %= mem[A1]	;resto
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+                
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
                 exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.A1, &inst);
@@ -526,7 +519,7 @@ class cpu_t
                 cpu->ESTADO.A1 = inst;
                 cpu->ESTADO.ACC %= cpu->ESTADO.A1;
 
-                cpu->ESTADO.PC++;
+                cpu->ESTADO.PC +=2;
             break;
 
             case NEG: // A =-A	;negação
@@ -535,17 +528,15 @@ class cpu_t
                 cpu->ESTADO.PC++;
             break;
 
-            case DESV: // PC = A1	;desvio
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+            case DESV: // PC = A1	;desvio                
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
                 cpu->ESTADO.PC = cpu->ESTADO.A1;
             break;
 
             case DESVZ: // se A for 0, PC = A1	;desvio condicional
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
                 if( cpu->ESTADO.ACC == 0)
@@ -554,13 +545,12 @@ class cpu_t
                 }
                 else
                 {
-                    cpu->ESTADO.PC++;
+                    cpu->ESTADO.PC += 2;
                 }
             break;
 
-            case DESVNZ: // se A não for 0, PC = A1	;desvio condicional
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+            case DESVNZ: // se A não for 0, PC = A1	;desvio condicional                
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
                 if( cpu->ESTADO.ACC != 0)
@@ -569,29 +559,27 @@ class cpu_t
                 }
                 else
                 {
-                    cpu->ESTADO.PC++;
+                    cpu->ESTADO.PC += 2;
                 }
             break;
 
             case LE: // A = es[A1]	;leitura de E/S
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
 
                 exec_err = es_t::es_le( cpu->es, cpu->ESTADO.A1, &cpu->ESTADO.ACC);
                 if ( exec_err != ERR_OK) break;
-                cpu->ESTADO.PC++;
+                cpu->ESTADO.PC += 2;
             break;
 
-            case ESCR: // es[A1] = A	;escrita de E/S
-                cpu->ESTADO.PC++;
-                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC, &inst);
+            case ESCR: // es[A1] = A	;escrita de E/S                
+                exec_err = mem_t::mem_le( cpu->mem, cpu->ESTADO.PC + 1, &inst);
                 if ( exec_err != ERR_OK) break;
                 cpu->ESTADO.A1 = inst;
                 exec_err = es_t::es_escreve( cpu->es, cpu->ESTADO.A1, cpu->ESTADO.ACC);
                 if ( exec_err != ERR_OK) break;
-                cpu->ESTADO.PC++;
+                cpu->ESTADO.PC += 2;
             break;
            
             default:
